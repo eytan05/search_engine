@@ -21,6 +21,7 @@ config = {
     "user": os.getenv("USER"),
     "port": os.getenv("PORT"),
     "guardian_api_key": os.getenv("GUARDIAN_API_KEY"),
+    "openai_key": os.getenv("OPENAI_API_KEY"),
 }
 
 

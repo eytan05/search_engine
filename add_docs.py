@@ -6,6 +6,8 @@ from embedding import get_embedding
 import PyPDF2
 import nltk
 from typing import Dict, List, Union
+import re
+import string
 
 
 def create_table_documents(config: Dict) -> None:
@@ -49,8 +51,7 @@ def add_document(doc_title: str, doc_text: str, config: Dict) -> None:
         port=config["port"],
     ) as conn:
         cur = conn.cursor()
-        doc_text = doc_text.replace("�", "'")
-        doc_text = doc_text.replace("\n", " ")
+        doc_text = clean_text(doc_text)
         text_list = split_text_into_triples(doc_text)
         doc_title = doc_title.replace("'", " ")
         if not check_documents_already_in(doc_title, config):
@@ -73,8 +74,15 @@ def add_document(doc_title: str, doc_text: str, config: Dict) -> None:
 
 def split_text_into_triples(text: str) -> List:
     sentences = nltk.tokenize.sent_tokenize(text)
-    triples = [" ".join(sentences[i : i + 3]) for i in range(0, len(sentences), 3)]
+    triples = [" ".join(sentences[i : i + 4]) for i in range(0, len(sentences), 4)]
     return triples
+
+
+def clean_text(text: str) -> str:
+    acceptable_chars = string.ascii_letters + string.digits + string.punctuation + 'éèêëàâäôöûüçÉÈÊËÀÂÄÔÖÛÜÇ'
+    cleaned_string = re.sub(f"[^{re.escape(acceptable_chars)}]", " ", text)
+    cleaned_string = cleaned_string.replace("\n", " ")
+    return cleaned_string
 
 
 def drop_table_documents(config: Dict) -> None:
