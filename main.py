@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from database import (
+from add_docs import (
     add_document,
     create_documents_table,
     add_pdf_document,
@@ -22,8 +22,6 @@ config = {
     "port": os.getenv("PORT"),
     "guardian_api_key": os.getenv("GUARDIAN_API_KEY"),
 }
-
-nltk.download("punkt")
 
 
 def upload_document() -> None:
@@ -87,4 +85,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    nltk.download("punkt")
     main()

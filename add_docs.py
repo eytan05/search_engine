@@ -52,6 +52,7 @@ def add_document(doc_title: str, doc_text: str, config: Dict) -> None:
         doc_text = doc_text.replace("�", "'")
         doc_text = doc_text.replace("\n", " ")
         text_list = split_text_into_triples(doc_text)
+        doc_title = doc_title.replace("'", " ")
         if not check_documents_already_in(doc_title, config):
             for paragraph_num, paragraph_text in enumerate(text_list):
                 if paragraph_text.strip() == "":
