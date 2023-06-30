@@ -5,12 +5,10 @@ This is an enhanced version of a simple search engine application that allows us
 ## Table of Contents
 
   - [Features](#features)
-  - [Updates in Version 2.0](#updates-in-version-2-0)
   - [Tech Stack](#tech-stack)
   - [Setup](#setup)
   - [Usage](#usage)
   - [Contributing](#contributing)
-  - [Changelog](#changelog)
   - [License](#license)
 
 ## Features
