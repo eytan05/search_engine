@@ -1,14 +1,14 @@
 from dotenv import load_dotenv
 from add_docs import (
     add_document,
-    create_documents_table,
-    add_pdf_document,
-    drop_tables_documents,
+    create_table_documents,
+    get_text_from_pdf,
+    drop_table_documents,
     add_all_files_from_folder,
 )
 import os
 from get_guardian_article import get_article
-from search_engine import get_documents, search
+from search_engine import get_documents, search, change_color_text
 import streamlit as st
 import nltk
 
@@ -31,7 +31,7 @@ def upload_document() -> None:
         file_title = uploaded_file.name
         filetype = uploaded_file.type.split("/")[-1]
         if filetype.lower() == "pdf":
-            doc_text = add_pdf_document(uploaded_file)
+            doc_text = get_text_from_pdf(uploaded_file)
         else:
             doc_text = uploaded_file.getvalue().decode("utf-8", errors="ignore")
         add_document(file_title, doc_text, config)
@@ -47,7 +47,7 @@ def search_document() -> None:
     if st.button("Search"):
         results = search(query, 5, config)
         for result in results:
-            st.write(f"Result: {result}")
+            change_color_text(result)
 
 
 def view_documents() -> None:
@@ -55,11 +55,11 @@ def view_documents() -> None:
     df = get_documents(config)
     st.dataframe(df)
     if st.button("Drop table"):
-        drop_tables_documents(config)
+        drop_table_documents(config)
 
 
 def main() -> None:
-    create_documents_table(config)
+    create_table_documents(config)
     st.sidebar.title("Navigation")
     page = st.sidebar.radio(
         "Go to",

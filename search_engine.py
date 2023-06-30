@@ -2,6 +2,8 @@ import psycopg2
 from psycopg2 import sql
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from typing import Dict, List, Tuple
+import streamlit as st
 from embedding import get_embedding
 import pandas as pd
 
@@ -33,7 +35,7 @@ def get_documents(config):
     return df
 
 
-def search(query, top_k, config):
+def search(query: str, top_k: int, config: Dict) -> List[Tuple]:
     with psycopg2.connect(
         database=config["db_name"],
         user=config["user"],
@@ -64,3 +66,10 @@ def search(query, top_k, config):
             )
         similarities.sort(key=lambda x: x[3], reverse=True)
         return similarities[:top_k]
+
+
+def change_color_text(t: Tuple) -> None:
+    doc_id, paragraph_num, paragraph_text, similarity_score = t
+    colored_paragraph_text = f"<span style='color:blue;'>{paragraph_text}</span>"
+    new_tuple = (doc_id, paragraph_num, colored_paragraph_text, similarity_score)
+    st.write(f"Result: {new_tuple}", unsafe_allow_html=True)

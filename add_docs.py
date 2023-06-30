@@ -8,7 +8,7 @@ import nltk
 from typing import Dict, List, Union
 
 
-def create_documents_table(config: Dict) -> None:
+def create_table_documents(config: Dict) -> None:
     with psycopg2.connect(
         database=config["db_name"],
         user=config["user"],
@@ -32,7 +32,7 @@ def create_documents_table(config: Dict) -> None:
     conn.close()
 
 
-def add_pdf_document(file: Union[UploadedFile, str]) -> str:
+def get_text_from_pdf(file: Union[UploadedFile, str]) -> str:
     pdf = PyPDF2.PdfReader(file)
     text = ""
     for page_num in range(len(pdf.pages)):
@@ -77,7 +77,7 @@ def split_text_into_triples(text: str) -> List:
     return triples
 
 
-def drop_tables_documents(config: Dict) -> None:
+def drop_table_documents(config: Dict) -> None:
     with psycopg2.connect(
         database=config["db_name"],
         user=config["user"],
@@ -100,7 +100,7 @@ def add_all_files_from_folder(folder_path: str, config: Dict) -> None:
             with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                 file_text = f.read()
         elif file[-3:] == "pdf":
-            file_text = add_pdf_document(file_path)
+            file_text = get_text_from_pdf(file_path)
         else:
             print("format not supported")
             continue
